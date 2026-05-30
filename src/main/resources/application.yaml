@@ -1,3 +1,7 @@
+server:
+  servlet:
+    context-path: /investment-assist
+
 spring:
   application:
     name: investment-assist

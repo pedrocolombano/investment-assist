@@ -3,10 +3,10 @@ package br.com.pedrocolombano.investmentassist.service;
 import br.com.pedrocolombano.investmentassist.dto.response.BancoCentralDto;
 import br.com.pedrocolombano.investmentassist.model.TaxaInvestimento;
 import br.com.pedrocolombano.investmentassist.proxy.BancoCentralProxy;
-import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,17 +26,16 @@ public class BancoCentralService {
         this.selicProxy = selicProxy;
     }
 
-    @PostConstruct
-    public void init() {
-        final BancoCentralDto taxaCdi = cdiProxy.getTaxaTotal()
-                                                .getFirst();
+    public void atualizarTaxas() {
+        final LocalDate dataAtual = LocalDate.now();
 
-        final BancoCentralDto taxaSelic = selicProxy.getTaxaTotal()
-                                                    .getFirst();
+        log.info("Consultando taxa CDI - {}", dataAtual);
+        final BancoCentralDto taxaCdi = cdiProxy.getTaxaTotal().getFirst();
+        log.info("Valor retornado taxa CDI | Data: {} - {}%", taxaCdi.data(), taxaCdi.valor());
 
-
-        log.info("Valor taxa CDI em {}: {}", taxaCdi.data(), taxaCdi.valor());
-        log.info("Valor taxa SELIC {}: {}", taxaCdi.data(), taxaCdi.valor());
+        log.info("Consultando taxa SELIC - {}", dataAtual);
+        final BancoCentralDto taxaSelic = selicProxy.getTaxaTotal().getFirst();
+        log.info("Valor retornado taxa SELIC | Data: {} - {}%", taxaSelic.data(), taxaSelic.valor());
 
         taxas.put(TaxaInvestimento.CDI, taxaCdi);
         taxas.put(TaxaInvestimento.SELIC, taxaSelic);
