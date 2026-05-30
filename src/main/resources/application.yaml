@@ -1,3 +1,14 @@
 spring:
   application:
     name: investment-assist
+
+  threads:
+    virtual:
+      enabled: true
+
+
+api:
+  bcb:
+    url: "https://api.bcb.gov.br/dados/serie/bcdata.sgs.%d/dados/ultimos/1?formato=json"
+    selic-code: 1178
+    cdi-code: 4389
