@@ -5,7 +5,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.json.JacksonJsonHttpMessageConverter;
 import org.springframework.web.client.RestClient;
+
+import java.util.List;
 
 @Configuration
 public class RestClientConfig {
@@ -21,6 +25,9 @@ public class RestClientConfig {
         return RestClient.builder()
                          .baseUrl(bancoCentralUrl.formatted(cdiCode))
                          .defaultHeader(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
+                         .configureMessageConverters(
+                                 converters ->
+                                 converters.addCustomConverter(jacksonHtmlConverter()))
                          .build();
     }
 
@@ -29,6 +36,18 @@ public class RestClientConfig {
         return RestClient.builder()
                          .baseUrl(bancoCentralUrl.formatted(selicCode))
                          .defaultHeader(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
+                         .configureMessageConverters(
+                                 converters ->
+                                         converters.addCustomConverter(jacksonHtmlConverter()))
                          .build();
+    }
+
+    private HttpMessageConverter<?> jacksonHtmlConverter() {
+        final JacksonJsonHttpMessageConverter converter = new JacksonJsonHttpMessageConverter();
+
+        converter.setSupportedMediaTypes(List.of(MediaType.APPLICATION_JSON,
+                                                 MediaType.TEXT_HTML,
+                                                 MediaType.TEXT_PLAIN));
+        return converter;
     }
 }
