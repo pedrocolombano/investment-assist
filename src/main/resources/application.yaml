@@ -13,6 +13,7 @@ spring:
 
 api:
   bcb:
-    url: "https://api.bcb.gov.br/dados/serie/bcdata.sgs.%d/dados/ultimos/1?formato=json"
+    url: "https://api.bcb.gov.br/dados/serie/bcdata.sgs.%d/dados/ultimos/%d?formato=json"
     selic-code: 1178
     cdi-code: 4389
+    ipca-code: 433

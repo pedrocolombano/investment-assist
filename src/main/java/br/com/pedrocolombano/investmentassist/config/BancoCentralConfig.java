@@ -20,4 +20,8 @@ public class BancoCentralConfig {
         return new BancoCentralProxyImpl(selicRestClient);
     }
 
+    @Bean
+    public BancoCentralProxy ipcaProxy(@Qualifier("ipcaRestClient") RestClient ipcaRestClient) {
+        return new BancoCentralProxyImpl(ipcaRestClient);
+    }
 }

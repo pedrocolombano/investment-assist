@@ -14,6 +14,9 @@ import java.util.List;
 @Configuration
 public class RestClientConfig {
 
+    private static final int LAST_MONTH = 1;
+    private static final int LAST_YEAR = 12;
+
     private final String bancoCentralUrl;
 
     public RestClientConfig(@Value("${api.bcb.url}") String bancoCentralUrl) {
@@ -23,7 +26,7 @@ public class RestClientConfig {
     @Bean
     public RestClient cdiRestClient(@Value("${api.bcb.cdi-code}") int cdiCode) {
         return RestClient.builder()
-                         .baseUrl(bancoCentralUrl.formatted(cdiCode))
+                         .baseUrl(bancoCentralUrl.formatted(cdiCode, LAST_MONTH))
                          .defaultHeader(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
                          .configureMessageConverters(
                                  converters ->
@@ -34,7 +37,18 @@ public class RestClientConfig {
     @Bean
     public RestClient selicRestClient(@Value("${api.bcb.selic-code}") int selicCode) {
         return RestClient.builder()
-                         .baseUrl(bancoCentralUrl.formatted(selicCode))
+                         .baseUrl(bancoCentralUrl.formatted(selicCode, LAST_MONTH))
+                         .defaultHeader(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
+                         .configureMessageConverters(
+                                 converters ->
+                                         converters.addCustomConverter(jacksonHtmlConverter()))
+                         .build();
+    }
+
+    @Bean
+    public RestClient ipcaRestClient(@Value("${api.bcb.ipca-code}") int ipcaCode) {
+        return RestClient.builder()
+                         .baseUrl(bancoCentralUrl.formatted(ipcaCode, LAST_YEAR))
                          .defaultHeader(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
                          .configureMessageConverters(
                                  converters ->
